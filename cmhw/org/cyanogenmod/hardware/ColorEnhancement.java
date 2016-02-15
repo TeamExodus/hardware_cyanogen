@@ -23,66 +23,52 @@ import android.util.Log;
 import java.io.File;
 
 /**
- * Adaptive backlight support (this refers to technologies like NVIDIA SmartDimmer,
- * QCOM CABL or Samsung CABC).
+ * Color enhancement support
  */
-public class AdaptiveBacklight {
+public class ColorEnhancement {
 
-    private static final String TAG = "AdaptiveBacklight";
+    private static final String TAG = "AutoContrast";
 
-    private static final String FILE_CABC = "/sys/class/graphics/fb0/cabc";
-
-    private static final boolean sHasNativeSupport =
-            LiveDisplayVendorImpl.hasNativeFeature(LiveDisplayVendorImpl.ADAPTIVE_BACKLIGHT);
+    private static final String FILE_CE = "/sys/class/graphics/fb0/color_enhance";
 
     /**
-     * Whether device supports an adaptive backlight technology.
+     * Whether device supports an color enhancement technology.
      *
      * @return boolean Supported devices must return always true
      */
     public static boolean isSupported() {
-        if (sHasNativeSupport) {
-            return true;
-        }
-
-        final File f = new File(FILE_CABC);
-
+        File f = new File(FILE_CE);
+        
         if(f.exists()) {
             return true;
         } else {
             return false;
-        }
+        } 
     }
 
     /**
-     * This method return the current activation status of the adaptive backlight technology.
+     * This method return the current activation status of the color enhancement technology.
      *
-     * @return boolean Must be false when adaptive backlight is not supported or not activated, or
+     * @return boolean Must be false when color enhancement is not supported or not activated, or
      * the operation failed while reading the status; true in any other case.
      */
     public static boolean isEnabled() {
         try {
-            if (sHasNativeSupport) {
-                return LiveDisplayVendorImpl.native_isAdaptiveBacklightEnabled();
-            }
-            return Integer.parseInt(FileUtils.readOneLine(FILE_CABC)) > 0;
+            return Integer.parseInt(FileUtils.readOneLine(FILE_CE)) > 0;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-        }
+        }   
         return false;
     }
 
     /**
-     * This method allows to setup adaptive backlight technology status.
+     * This method allows to setup color enhancement technology status.
      *
-     * @param status The new adaptive backlight status
+     * @param status The new color enhancement status
      * @return boolean Must be false if adaptive backlight is not supported or the operation
      * failed; true in any other case.
      */
     public static boolean setEnabled(boolean status) {
-        if (sHasNativeSupport) {
-            return LiveDisplayVendorImpl.native_setAdaptiveBacklightEnabled(status);
-        }
-        return FileUtils.writeLine(FILE_CABC, status ? "1" : "0");
+        return FileUtils.writeLine(FILE_CE, status ? "1" : "0");
     }
 }
