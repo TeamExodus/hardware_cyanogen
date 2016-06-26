@@ -16,7 +16,7 @@
 
 package org.cyanogenmod.hardware;
 
-import org.cyanogenmod.hardware.internal.util.FileUtils;
+import org.cyanogenmod.hardware.util.FileUtils;
 
 import android.util.Log;
 

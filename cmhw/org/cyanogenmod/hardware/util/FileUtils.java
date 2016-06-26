@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cyanogenmod.internal.util;
+package org.cyanogenmod.hardware.util;
 
 import android.util.Log;
 
